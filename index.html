@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ImageCarousel</title>
+    <script type="text/javascript" src="./ImageCarousel.js"></script>
+    <link rel="stylesheet" href="./ImageCarousel.css" />
+    <style>
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    <div></div>
+    <div class="container"></div>
 </body>
+<script>
+    let images = [
+        "./images/1.jpg",
+        "./images/2.jpg",
+        "./images/3.jpg",
+        "./images/4.jpg",
+        "./images/5.jpg",
+        "./images/1.jpg",
+        "./images/2.jpg",
+        "./images/3.jpg",
+        "./images/4.jpg",
+        "./images/5.jpg"
+    ]
+    new ImageCarousel(images, {target: document.querySelector(".container")}).init();
+</script>
 </html>

@@ -1,0 +1,23 @@
+
+@font-face {font-family: "garaschan-icons";
+  src: url('iconfont.eot?t=1538270504315'); /* IE9*/
+  src: url('iconfont.eot?t=1538270504315#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAR4AAsAAAAABvwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY9IE4QY21hcAAAAYAAAABiAAABnLq0MIVnbHlmAAAB5AAAAJsAAADEN1UjR2hlYWQAAAKAAAAALAAAADYSys+yaGhlYQAAAqwAAAAcAAAAJAfeA4VobXR4AAACyAAAAA4AAAAQEAAAAGxvY2EAAALYAAAACgAAAAoAfAA+bWF4cAAAAuQAAAAfAAAAIAEPAB9uYW1lAAADBAAAAUUAAAJtPlT+fXBvc3QAAARMAAAAKwAAADxEajlieJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByerXojx9zwv4EhhrmBoQEozAiSAwDtyQyxeJztkMENgCAMRV8BDTHOwAQejQN5cjbDXJzYAUvx4BD+5jXtT9PDBybAK5sSQC6ErlNdMd+zmB84dI9aDspdck2tfSeT2EXUyY0PMvNrtb6/m++pDSzLPOh+TQPkAX2EFxIAAHicdcw9CsJAFATgNxvcnxfYhC0SFFlBiOkkSDCdOU168RyeRI+ilxBBWw+gwUVj6RTDNPMRKERs8aCYCBs0S5QWykNQ1QJt9WmkvxWavp+D6MgRFaumWNdlsbDIZlAWHtjFGhPm/s5ZGulXr0Yy6eTVTM1FRS7Xp7N0jgfnODjzYNTB8pAJcg8LsWfd35gx5iwR5vnHeQM1nh7hAHicY2BkYGAAYgfeLJZ4fpuvDNwsDCBw/ZqbBjLNwsCUCqQ4GJhAPADS0QcXeJxjYGRgYG7438AQw8IAAkCSkQEVsAAARwoCbXicY2FgYGBBwgAAsAARAAAAAAAAABoAPgBiAAB4nGNgZGBgYGEQZgDRDAxMQMwFhAwM/8F8BgAKqAEvAHicZY9NTsMwEIVf+gekEqqoYIfkBWIBKP0Rq25YVGr3XXTfpk6bKokjx63UA3AejsAJOALcgDvwSCebNpbH37x5Y08A3OAHHo7fLfeRPVwyO3INF7gXrlN/EG6QX4SbaONVuEX9TdjHM6bCbXRheYPXuGL2hHdhDx18CNdwjU/hOvUv4Qb5W7iJO/wKt9Dx6sI+5l5XuI1HL/bHVi+cXqnlQcWhySKTOb+CmV7vkoWt0uqca1vEJlODoF9JU51pW91T7NdD5yIVWZOqCas6SYzKrdnq0AUb5/JRrxeJHoQm5Vhj/rbGAo5xBYUlDowxQhhkiMro6DtVZvSvsUPCXntWPc3ndFsU1P9zhQEC9M9cU7qy0nk6T4E9XxtSdXQrbsuelDSRXs1JErJCXta2VELqATZlV44RelzRiT8oZ0j/AAlabsgAAAB4nGNgYoAALgbsgIWRiZGZkYWRlYElJTMxjyUvtaKEpaAotYyBAQA00QVHAA==') format('woff'),
+  url('iconfont.ttf?t=1538270504315') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1538270504315#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+[class *= "garaschan-icons"] {
+  font-family:"garaschan-icons" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.garaschan-icons-dian:before { content: "\ec1e"; }
+
+.garaschan-icons-next:before { content: "\e6aa"; }
+
+.garaschan-icons-prev:before { content: "\e6ac"; }
+

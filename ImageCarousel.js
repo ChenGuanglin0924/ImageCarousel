@@ -1,58 +1,51 @@
 (function(win, doc) {
     /**
-     * ImageCarousel
+     * 图片轮播
      * @param {Array} images 
      * @param {Object} options 
      */
     let ImageCarousel = function(images, options) {
         this.images = images;
         let defaults = {
-            target: doc.querySelector("body"),
-            showToggleButton: true
+            target: doc.querySelector("body"),  //目标对象DOM
+            showBottomToggle: true,  //是否显示底部切换按钮
+            showBottomMenu: true,  //是否显示底部切换菜单
+            showSlidesToggle: true,  //是否显示两侧切换按钮
+            contentWidth: 800,  //轮播容器宽度
+            contentHeight: 600,  //轮播容器高度
+            menuBarHeight: options.menuBarHeight ? options.menuBarHeight : 100,  //底部切换菜单高度
+            menuBarNum: 8,  //底部切换菜单视窗显示数量
+            isAutoToggle: true,  //是否自动切换图片
+            animationInterval: 3000  //自动切换图片时间间隔
         };
         this.options = Object.assign({}, defaults, options);
+        this.selectedImgIdx = 0;
     }
+    /**
+     * 图片轮播属性
+     */
     ImageCarousel.prototype = {
         /**
          * 初始化函数
          */
         init: function() {
             this.renderDOM();
-            
-            this.addImages(this.images);
-
-            this.bindEvents();
-        },
-
-        /**
-         * 绑定事件
-         */
-        bindEvents: function() {
-            this.getElms("menuBar").addEventListener("mouseover", this.selectedImgChanged.bind(this));
+            this.options.isAutoToggle && this.autoToggle(this.options.animationInterval);
         },
 
         /**
          * 选中图片改变事件
-         * @param {*} e 索引、事件源对象、DOM元素
+         * @param {Number} idx 索引
          */
-        selectedImgChanged: function(e) {
-            let url = "";
-            if (this.isNumber(e)) {
-                //e为当前图片在images数组中的索引
-                url = `url(${this.images[e]})`;
-                this.removeClass(this.getElms("selected"), "selected");
-                this.addClass(this.getElms("item", true)[e], "selected");
+        selectedImgChanged: function(idx) {
+            if (!this.isNumber(idx) || (this.isNumber(idx) && (idx < 0 || idx > this.images.length - 1))) {
+                return;
             }
-            else {
-                //e为鼠标移动时的源对象或传入DOM元素
-                let img = e.target || e;
-                if (img.className !== "item") {
-                    return;
-                }
-                url = img.style.backgroundImage;
-                this.removeClass(this.getElms("selected"), "selected");
-                this.addClass(img, "selected");
-            }
+            this.selectedImgIdx = idx;
+            let url = `url(${this.images[idx]})`;
+            this.removeClass(this.getElms("selected", true), "selected");
+            this.addClass(this.getElms("item", true)[idx], "selected");
+            this.addClass(this.getElms("garaschan-icons-dian", true)[idx], "selected");
             this.getElms("content").style.backgroundImage = url;
         },
 
@@ -74,18 +67,21 @@
 
         /**
          * 移除样式
-         * @param {Element} element element
+         * @param {Array} elements element
          * @param {String} 样式名
          */
-        removeClass: function(element, className) {
-            if (!element) {
+        removeClass: function(elements, className) {
+            if (elements.length === 0) {
                 return;
             }
-            let elmClass = element.getAttribute("class").trim();
-            if (className && elmClass.indexOf(className) > -1) {
-                elmClass = elmClass.replace(className, "");
+            let len = elements.length;
+            for (let i = 0; i < len; i++) {
+                let elmClass = elements[0].getAttribute("class").trim();
+                if (className && elmClass.indexOf(className) > -1) {
+                    elmClass = elmClass.replace(className, "");
+                }
+                elements[0].setAttribute("class", elmClass.trim());
             }
-            element.setAttribute("class", elmClass.trim());
         },
 
         /**
@@ -121,37 +117,113 @@
          * @returns {Boolean}
          */
         isNumber: (value) => {
-            if (value === '') return false;
-            let mdata = Number(value);
-            if (mdata === 0) return true;
-            return !isNaN(mdata);
+            if (value === '' || value === null) return false;
+            return !isNaN(value);
         },
 
         /**
          * 渲染外层容器
          */
         renderDOM: function() {
+            let imageCarouselSize = [
+                `width: ${this.options.contentWidth}px`,
+                `height: ${this.options.contentHeight}px`
+            ]
             //轮播容器
             let imageCarousel = doc.createElement("div");
             imageCarousel.className = "imageCarousel";
+            imageCarousel.style = imageCarouselSize.join(";");
             this.options.target.appendChild(imageCarousel);
-            //显示容器
+            //内容显示容器
+            let contentHeight = this.options.showBottomMenu ? this.options.contentHeight - this.options.menuBarHeight : this.options.contentHeight;
             let content = doc.createElement("div");
             content.className = "content";
+            content.style.height = `${contentHeight}px`;
             imageCarousel.appendChild(content);
-            //切换菜单容器
-            let menuBar = doc.createElement("div");
-            menuBar.className = "menuBar"
-            imageCarousel.appendChild(menuBar);
-            //切换按钮
+            //两侧切换按钮
+            this.options.showSlidesToggle && this.creaSidesToggleBtn();
+            //底部切换按钮
+            this.options.showBottomToggle && this.createBottomToggleBtn();
+            //底部切换菜单
+            this.options.showBottomMenu && this.createBottomMenuBar();
+        },
+
+        /**
+         * 创建两侧切换按钮
+         */
+        creaSidesToggleBtn: function() {
+            let content = this.getElms("content");
             let leftToggleButton = doc.createElement("a");
-            leftToggleButton.className = "leftToggleButton";
-            leftToggleButton.innerText = "<";
+            leftToggleButton.className = "leftToggleButton garaschan-icons-prev";
+            leftToggleButton.title = "Prev";
             content.appendChild(leftToggleButton);
             let rightToggleButton = doc.createElement("a");
-            rightToggleButton.className = "rightToggleButton";
-            rightToggleButton.innerText = ">";
+            rightToggleButton.className = "rightToggleButton garaschan-icons-next";
+            rightToggleButton.title = "Next";
             content.appendChild(rightToggleButton);
+            leftToggleButton.addEventListener("click", this.sidesToggleClickd.bind(this, 0));
+            rightToggleButton.addEventListener("click", this.sidesToggleClickd.bind(this, 1));
+        },
+
+        /**
+         * 两侧切换按钮点击事件
+         */
+        sidesToggleClickd: function(type) {
+            if (type && this.selectedImgIdx < this.images.length - 1) {
+                this.selectedImgChanged(this.selectedImgIdx + 1);
+            }
+            else if (!type && this.selectedImgIdx > 0) {
+                this.selectedImgChanged(this.selectedImgIdx - 1);
+            }
+        },
+
+        /**
+         * 创建底部菜单栏
+         */
+        createBottomMenuBar: function() {
+            let menuBar = doc.createElement("div");
+            menuBar.className = "menuBar";
+            menuBar.style.height = `${this.options.menuBarHeight}px`;
+            this.getElms("imageCarousel").appendChild(menuBar);
+            this.addImages(this.images);
+            menuBar.addEventListener("mouseover", this.menuBarChanged.bind(this));
+        },
+
+        /**
+         * 底部菜单改变事件
+         */
+        menuBarChanged: function(e) {
+            let url = e.target.style.backgroundImage;
+            if (this.isString(url) && url.trim() !== "") {
+                let url1 = url.match(/\("(.+)"\)/)[1];
+                let idx = this.images.indexOf(url1);
+                this.selectedImgChanged(idx);
+            }
+        },
+
+        /**
+         * 创建底部切换按钮
+         */
+        createBottomToggleBtn: function() {
+            let bottomToggleButton = doc.createElement("ul");
+            bottomToggleButton.className = "bottomToggleUl";
+            let UIs = [];
+            this.images.forEach((img, idx) => {
+                UIs.push('<li><a class="garaschan-icons-dian" idx="' + idx + '"></a></li>');
+            });
+            bottomToggleButton.innerHTML = UIs.join("");
+            this.getElms("content").appendChild(bottomToggleButton);
+            bottomToggleButton.addEventListener("mouseover", this.bottomToggleChanged.bind(this));
+        },
+
+        /**
+         * 底部切换按钮改变事件
+         */
+        bottomToggleChanged: function(e) {
+            let idx = e.target.getAttribute("idx");
+            if (e.target.tagName === "A" && this.isNumber(idx)) {
+                this.selectedImgChanged(idx);
+            }
         },
 
         /**
@@ -159,9 +231,11 @@
          * @param {Array} urls 图片路径数组
          */
         addImages: function(urls) {
-            urls.forEach((url) => {
-                this.addImage(url);
-            });
+            if (this.options.showBottomMenu) {
+                urls.forEach((url) => {
+                    this.addImage(url);
+                });
+            }
             //默认选中第一张图片
             this.selectedImgChanged(0);
         },
@@ -173,93 +247,25 @@
         addImage: function(url) {
             let img = doc.createElement("div");
             img.className = "item";
-            // img.src = url;
+            img.style.width = `${this.options.contentWidth / this.options.menuBarNum}px`;
             img.style.backgroundImage = `url(${url})`;
             this.getElms("menuBar").appendChild(img);
         },
 
         /**
-         * 初始化滚动条
+         * 轮播自动切换
          */
-        resizeScroll: function() {
-            if(this.uiInfs.length === 4) {
-                /* 真实dom 渲染结束  */
-                //判断浏览器
-                let isIE = navigator.userAgent.match(/MSIE (\d)/i);
-                isIE = isIE ? isIE[1] : undefined;
-                let isFF = /FireFox/i.test(navigator.userAgent);
-    
-                let container = this.refs.layerTypes;
-                let slider = this.refs.slider;
-                let sliderBg = this.refs.sliderBg;
-    
-                if (isIE < 9) //传统浏览器使用MouseWheel事件
-                {
-                    container.attachEvent("onmousewheel", function (e) {
-                        //计算鼠标滚轮滚动的距离
-                        let v = e.wheelDelta / 2;
-                        container.scrollLeft += v;
-                        slider.style.marginLeft = container.scrollLeft +'px';
-                        //阻止浏览器默认方法
-                        return false;
-                    });
+        autoToggle: function(interval){
+            let me = this;
+            this.getElms("content").timer = setInterval(function() {
+                me.selectedImgChanged(me.selectedImgIdx);
+                if (me.selectedImgIdx > -1 && me.selectedImgIdx < me.images.length - 1) {
+                    me.selectedImgIdx ++;
                 }
-                else if (!isFF) //除火狐外的现代浏览器也使用MouseWheel事件
-                {
-                    container.addEventListener("mousewheel", function (e) {
-                        //计算鼠标滚轮滚动的距离
-                        let v = -e.wheelDelta / 2;
-                        container.scrollLeft += v;
-                        slider.style.marginLeft = container.scrollLeft +'px';
-                        //阻止浏览器默认方法
-                        e.preventDefault();
-                    }, false);
+                else {
+                    me.selectedImgIdx = 0;
                 }
-                else //火狐使用DOMMouseScroll事件
-                {
-                    container.addEventListener("DOMMouseScroll", function (e) {
-                        //计算鼠标滚轮滚动的距离
-                        container.scrollLeft += e.detail * 80;
-                        slider.style.marginLeft = container.scrollLeft +'px';
-                        //阻止浏览器默认方法
-                        e.preventDefault();
-                    }, false);
-                    
-                }
-                //点击和拖动事件  IE11、Chrome和Firefox测试OK
-                sliderBg.onmousedown = function(e) {
-                    //判断鼠标点击元素  slider则为拖动，slider-bg则为点击
-                    if(e.target.className === "slider-bg") {
-                        let xLeft = e.clientX - 76;  //76为sliderBg相对于屏幕左侧的距离
-                        if(xLeft < sliderBg.offsetWidth - slider.offsetWidth) {
-                            container.scrollLeft = xLeft;
-                        }
-                        else if(xLeft < sliderBg.offsetWidth) {
-                            container.scrollLeft = xLeft - slider.offsetWidth;
-                        }
-                        slider.style.marginLeft = container.scrollLeft +'px';
-                    }
-                    else {
-                        //阻止浏览器默认方法
-                        e.preventDefault();
-                        let left = e.clientX - slider.offsetLeft;
-                        document.onmousemove = function(e) {
-                            var xLeft = e.clientX - left;
-                            if (xLeft <= 0) {
-                                xLeft = 0;
-                            };
-                            if (xLeft >= sliderBg.clientWidth - slider.clientWidth) {
-                                xLeft = sliderBg.clientWidth - slider.clientWidth;
-                            };
-                            slider.style.marginLeft = xLeft + 'px';
-                            container.scrollLeft = xLeft;
-                        }
-                        document.onmouseup = function (){
-                            document.onmousemove = null;
-                        }
-                    }
-                }
-            }
+            }, interval);
         },
 
         /**

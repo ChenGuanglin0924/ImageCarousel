@@ -1,0 +1,19 @@
+{
+  "name": "image-carousel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "image-carousel.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChenGuanglin0924/image-carousel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChenGuanglin0924/image-carousel/issues"
+  },
+  "homepage": "https://github.com/ChenGuanglin0924/image-carousel#readme"
+}

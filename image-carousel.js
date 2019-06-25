@@ -131,7 +131,7 @@
             ]
             //轮播容器
             let imageCarousel = doc.createElement("div");
-            imageCarousel.className = "imageCarousel";
+            imageCarousel.className = "image-carousel";
             imageCarousel.style = imageCarouselSize.join(";");
             this.options.target.appendChild(imageCarousel);
             //内容显示容器
@@ -184,7 +184,7 @@
             let menuBar = doc.createElement("div");
             menuBar.className = "menuBar";
             menuBar.style.height = `${this.options.menuBarHeight}px`;
-            this.getElms("imageCarousel").appendChild(menuBar);
+            this.getElms("image-carousel").appendChild(menuBar);
             this.addImages(this.images);
             menuBar.addEventListener("mouseover", this.menuBarChanged.bind(this));
         },
